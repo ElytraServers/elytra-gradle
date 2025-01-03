@@ -34,7 +34,7 @@ java {
 gradlePlugin {
     plugins {
         create("elytra") {
-            id = "cn.elytra.gradle"
+            id = "com.github.ElytraServers.elytra-gradle"
             implementationClass = "cn.elytra.gradle.ElytraGradlePlugin"
         }
     }

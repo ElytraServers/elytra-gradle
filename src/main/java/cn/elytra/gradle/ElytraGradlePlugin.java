@@ -22,9 +22,7 @@ public class ElytraGradlePlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project target) {
-		final ElytraExtension extension = target.getExtensions().create("elytra", ElytraExtension.class);
 		final TaskContainer tasks = target.getTasks();
-
 
 		tasks.register("generateLanguageFiles", GenerateLanguageFilesTask.class, task -> {
 			task.setGroup("elytra");

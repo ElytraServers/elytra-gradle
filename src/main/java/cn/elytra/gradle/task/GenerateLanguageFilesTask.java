@@ -38,36 +38,65 @@ import java.util.regex.Pattern;
  */
 public abstract class GenerateLanguageFilesTask extends DefaultTask {
 
+	/**
+	 * @see #getSourceFiles()
+	 */
 	public FileCollection sourceFiles;
 
+	/**
+	 * The default constructor.
+	 */
 	@Inject
 	public GenerateLanguageFilesTask() {
 	}
 
+	/**
+	 * @return the file collection of source files to read the localization comments.
+	 */
 	@InputFiles
 	public FileCollection getSourceFiles() {
 		return sourceFiles;
 	}
 
+	/**
+	 * Set the source files to read the localization comments.
+	 *
+	 * @param sourceFiles the file collect
+	 */
 	public void setSourceFiles(FileCollection sourceFiles) {
 		this.sourceFiles = sourceFiles;
 	}
 
+	/**
+	 * @return the key pattern to match the localization key
+	 */
 	@Input
 	@Optional
 	public abstract Property<String> getKeyPattern();
 
+	/**
+	 * @return the value pattern to match the localization key
+	 */
 	@Input
 	@Optional
 	public abstract Property<String> getValuePattern();
 
+	/**
+	 * @return the list of allowed language codes like {@code zh_CN}, {@code en_US}.
+	 */
 	@Input
 	@Optional
 	public abstract ListProperty<String> getAllowedLanguageCodes();
 
+	/**
+	 * @return the output directory
+	 */
 	@OutputDirectory
 	public abstract DirectoryProperty getOutputDirectory();
 
+	/**
+	 * @see GenerateLanguageFilesTask
+	 */
 	@TaskAction
 	public void run() {
 		var keyPattern = getKeyPattern().getOrNull();
@@ -116,7 +145,7 @@ public abstract class GenerateLanguageFilesTask extends DefaultTask {
 		}
 	}
 
-	public class LocalizationTextCollector {
+	class LocalizationTextCollector {
 
 		@NotNull
 		protected Pattern keyPattern;
