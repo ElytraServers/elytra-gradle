@@ -5,6 +5,36 @@ their localization texts in the code, and generate the .lang files by custom Gra
 
 ## Usage
 
+Well, JitPack is somehow compatible with Gradle Plugin projects.
+
+In `build.gradle[.kts]`
+
+```groovy
+plugins {
+    id "com.github.ElytraServers.elytra-gradle" version "commit-hash-or-branch-name-or-release-version"
+}
+```
+
+In `settings.gradle[.kts]`
+
+```groovy
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
+        // ... other maven repositories for plugins
+
+        maven {
+            url = "https://jitpack.io"
+        }
+    }
+}
+```
+
+<details>
+<summary>Outdated</summary>
+
 Since I don't hold a Maven repository, so you'll need to add this plugin via JitPack in a pretty dirty way.
 
 In `build.gradle` or `build.gradle.kts`
@@ -37,12 +67,16 @@ pluginManagement {
 
 Or, you can clone, compile and publish to your local Maven repository using task `publishToMavenLocal`.
 
+</details>
+
 ### Tasks
 
 #### `generateLanguageFiles`
 
 This task will collect the comments with special patterns in the source code files, and generate language files to the
 output directory.
+
+You need to add source files via `addSourceDirectorySet(SourceDirectorySet)`.
 
 The default localization key pattern is `//#tr <key>`, and the localization value pattern is
 `// <lang_code> <translated_text>`. The whitespaces are sensitive, so keep them.
@@ -57,8 +91,16 @@ adding Simp. Chinese, the language file is `zh_CN.lang`, so the language code is
 As for existing projects with different patterns, you can set the key pattern via `keyPattern` and the value pattern
 via `keyPattern`. They are both used to compile into _Pattern_ for matching.
 
-And there is not an option to set which _SourceSet_ to process, but all files are processed. This should be fixed later,
-but I don't know how. TwT
+```groovy
+generateLanguageFiles {
+    addSourceDirectorySet(sourceSets.main.java)
+    addSourceDirectorySet(sourceSets.main.kotlin) // if you have kotlin source set
+
+    allowedLanguageCodes = ["en_US", "zh_CN"] // set the allowed language codes, en_US is only default
+    setOutputDirectory(file("testGenerated")) // the output dir of language files, commonly set to /src/resources/assets/{modid}/lang/
+}
+
+```
 
 See [TestProject/build.gradle](/TestProject/build.gradle).
 
