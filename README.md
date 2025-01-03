@@ -1,5 +1,7 @@
 # Elytra Gradle Plugin
 
+[![](https://jitpack.io/v/ElytraServers/elytra-gradle.svg?style=flat-square)](https://jitpack.io/#ElytraServers/elytra-gradle)
+
 This plugin is designed to be a helpful tool for developing legacy Minecraft 1.7.10 Mods, where developers usually put
 their localization texts in the code, and generate the .lang files by custom Gradle tasks.
 
