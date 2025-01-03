@@ -3,6 +3,7 @@ package cn.elytra.gradle.task;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.*;
@@ -22,6 +23,8 @@ import java.util.regex.Pattern;
 /**
  * This task will collect the comments with special patterns in the source code files, and generate language files to the output directory.
  * <p>
+ * You need to add source files via {@link #addSourceDirectorySet(SourceDirectorySet)}.
+ * <p>
  * The default localization key pattern is {@code //#tr <key>}, and the localization value pattern is {@code // <lang_code> <translated_text>}. The whitespaces are sensitive, so keep them.
  * The key pattern and the value patterns should be together without an empty line in-between.
  * <p>
@@ -30,8 +33,6 @@ import java.util.regex.Pattern;
  * <p>
  * As for existing projects with different patterns, you can set the key pattern via {@link #getKeyPattern()} and the value pattern via {@link #getKeyPattern()}.
  * They are both used to compile into {@link Pattern} for matching. See the default ones in {@link LocalizationTextCollector}.
- * <p>
- * And there is not an option to set which {@link SourceSet} to process, but all files are processed. This should be fixed later, but I don't know how. TwT
  *
  * @author Taskeren
  * @since 1.0
@@ -48,6 +49,7 @@ public abstract class GenerateLanguageFilesTask extends DefaultTask {
 	 */
 	@Inject
 	public GenerateLanguageFilesTask() {
+		sourceFiles = getProject().files();
 	}
 
 	/**
@@ -56,6 +58,15 @@ public abstract class GenerateLanguageFilesTask extends DefaultTask {
 	@InputFiles
 	public FileCollection getSourceFiles() {
 		return sourceFiles;
+	}
+
+	/**
+	 * Add a {@link SourceDirectorySet} to the file collection to read the localization comments.
+	 *
+	 * @param sourceDirSet the SourceDirectorySet
+	 */
+	public void addSourceDirectorySet(SourceDirectorySet sourceDirSet) {
+		sourceFiles = sourceFiles.plus(sourceDirSet.getSourceDirectories());
 	}
 
 	/**
@@ -114,7 +125,14 @@ public abstract class GenerateLanguageFilesTask extends DefaultTask {
 
 		getLogger().debug("Patterns are prepared, collecting localization data");
 
-		for(File file : sourceFiles) {
+		if(sourceFiles.isEmpty()) {
+			getLogger().warn("No source files specified");
+			getLogger().warn("Use \"addSourceDirectorySet(sourceSet.main.java)\" to add Java source files.");
+			return;
+		}
+
+		for(File file : sourceFiles.getAsFileTree().getFiles()) {
+			getLogger().debug("Visiting file: {}", file);
 			collector.loadSourceFile(file);
 		}
 

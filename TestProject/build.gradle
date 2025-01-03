@@ -1,7 +1,8 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '2.0.0'
-    id 'cn.elytra.gradle' version '1.0-SNAPSHOT'
+    id 'com.github.ElytraServers.elytra-gradle' version '1.0-SNAPSHOT'
+
 }
 
 repositories {
@@ -13,6 +14,9 @@ dependencies {
 }
 
 generateLanguageFiles {
+    addSourceDirectorySet(sourceSets.main.java)
+    addSourceDirectorySet(sourceSets.main.kotlin)
+
     allowedLanguageCodes = ["en_US", "zh_CN"]
     setOutputDirectory(file("testGenerated"))
 }
