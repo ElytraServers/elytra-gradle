@@ -1,2 +1,5 @@
 jdk:
   - openjdk21
+install:
+  - "./gradlew :elytra-gradle:clean"
+  - "./gradlew :elytra-gradle:publishToMavenLocal -x :elytra-gradle:test"
