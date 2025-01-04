@@ -6,4 +6,4 @@ pluginManagement {
 
 rootProject.name = 'elytra-gradle-tests'
 
-include("TestProject")
+include("example")
